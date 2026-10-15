@@ -10,3 +10,9 @@
 > the editor, so keep the branch in a working state.
 
 <!-- LOVABLE:END -->
+
+## Project rules
+- Catalog data (brands, products, product_images, site_settings) lives in Supabase and is read with the browser client in route loaders via TanStack Query (src/lib/catalog.ts); never hardcode products.
+- Watch photos are in the private `watch-images` bucket (workspace blocks public buckets); always display them via signed URLs.
+- Public SELECT policies must not call has_role (anon cannot execute it); admin access is a separate `for all to authenticated` policy.
+- Brand display order is computed client-side with sortBrands (case-insensitive name), never by insert order.
