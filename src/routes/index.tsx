@@ -41,7 +41,7 @@ function Home() {
     <Layout overlay>
       <section className="relative flex min-h-[88vh] items-end">
         <HeroSlider
-          images={heroImages.map((src, i) => ({ src, alt: ["Steel wristwatch with champagne dial on ivory linen", "Gold chronograph with brown leather strap", "Minimal cream-dial watch worn on the wrist"][i] }))}
+          images={heroImages.map((src, i) => ({ src, alt: ["Steel wristwatch with champagne dial on ivory linen", "Gold chronograph with brown leather strap", "Minimal cream-dial watch worn on the wrist"][i] ?? "Wristwatch" }))}
         />
         <div className="pointer-events-none relative z-10 mx-auto w-full max-w-6xl px-6 pb-28">
           <p className="fade-up text-xs font-semibold uppercase tracking-[0.35em] text-gold-soft">JewelsByDelight</p>

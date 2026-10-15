@@ -21,10 +21,10 @@ export function HeroSlider({ images }: { images: { src: string; alt: string }[] 
   return (
     <div
       className="absolute inset-0 overflow-hidden"
-      onTouchStart={(e) => (touch.current = e.touches[0].clientX)}
+      onTouchStart={(e) => (touch.current = e.touches[0]!.clientX)}
       onTouchEnd={(e) => {
         if (touch.current == null) return;
-        const dx = e.changedTouches[0].clientX - touch.current;
+        const dx = e.changedTouches[0]!.clientX - touch.current;
         if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
         touch.current = null;
       }}

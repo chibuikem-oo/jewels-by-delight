@@ -14,10 +14,10 @@ export const Route = createFileRoute("/brands/$slug")({
     const idx = brands.findIndex((b) => b.slug === params.slug);
     if (idx < 0) throw notFound();
     await Promise.all([
-      queryClient.ensureQueryData(brandProductsQuery(brands[idx].id)),
+      queryClient.ensureQueryData(brandProductsQuery(brands[idx]!.id)),
       queryClient.ensureQueryData(settingsQuery()),
     ]);
-    return { name: brands[idx].name };
+    return { name: brands[idx]!.name };
   },
   head: ({ loaderData }) => {
     const t = loaderData ? `${loaderData.name} Watches | JewelsByDelight` : "Brand | JewelsByDelight";
@@ -48,7 +48,7 @@ function BrandPage() {
   const { slug } = Route.useParams();
   const { data: brands } = useSuspenseQuery(brandsQuery());
   const idx = brands.findIndex((b) => b.slug === slug);
-  const brand = brands[idx];
+  const brand = brands[idx]!;
   const { data: products } = useSuspenseQuery(brandProductsQuery(brand.id));
   return (
     <Layout>

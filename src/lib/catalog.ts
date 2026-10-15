@@ -97,7 +97,7 @@ async function signImages(rows: Omit<ProductImage, "url">[]): Promise<ProductIma
       60 * 60 * 24 * 7,
     );
   const map = new Map((data ?? []).map((d) => [d.path, d.signedUrl]));
-  return rows.map((r) => ({ ...r, url: map.get(r.storage_path) ?? "" }));
+  return rows.map((r) => ({ ...r, url: (map.get(r.storage_path) as string | undefined) ?? "" }));
 }
 
 export async function signPath(path: string) {

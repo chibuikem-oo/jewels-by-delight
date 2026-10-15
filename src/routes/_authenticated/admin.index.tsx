@@ -26,7 +26,9 @@ function Dashboard() {
   const { data: settings } = useQuery(settingsQuery());
   const [wa, setWa] = useState("");
   const [brandFilter, setBrandFilter] = useState("");
-  useEffect(() => setWa(settings?.whatsapp_number ?? ""), [settings]);
+  useEffect(() => {
+    setWa(settings?.whatsapp_number ?? "");
+  }, [settings]);
 
   const stats = [
     ["Total watches", products.length],

@@ -49,21 +49,21 @@ function Gallery({ product }: { product: Product }) {
   if (!imgs.length)
     return <div className="flex aspect-square items-center justify-center rounded-2xl bg-secondary text-muted-foreground"><Watch className="h-12 w-12" /></div>;
   const go = (d: number) => setI((x) => (x + d + imgs.length) % imgs.length);
-  const alt = (k: number) => imgs[k].alt_text || `${product.brand?.name} ${product.name} photo ${k + 1}`;
+  const alt = (k: number) => imgs[k]!.alt_text || `${product.brand?.name} ${product.name} photo ${k + 1}`;
   return (
     <div>
       <div
         className="relative overflow-hidden rounded-2xl bg-secondary"
-        onTouchStart={(e) => (touch.current = e.touches[0].clientX)}
+        onTouchStart={(e) => (touch.current = e.touches[0]!.clientX)}
         onTouchEnd={(e) => {
           if (touch.current == null) return;
-          const dx = e.changedTouches[0].clientX - touch.current;
+          const dx = e.changedTouches[0]!.clientX - touch.current;
           if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
           touch.current = null;
         }}
       >
         <button onClick={() => setZoom(true)} className="block w-full" aria-label="Open larger image">
-          <img src={imgs[i].url} alt={alt(i)} width={1000} height={1000} className="aspect-square w-full object-contain" />
+          <img src={imgs[i]!.url} alt={alt(i)} width={1000} height={1000} className="aspect-square w-full object-contain" />
         </button>
         {imgs.length > 1 && (
           <>
@@ -84,7 +84,7 @@ function Gallery({ product }: { product: Product }) {
       {zoom && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/90 p-4" role="dialog" aria-modal onClick={() => setZoom(false)}>
           <button aria-label="Close" className="absolute right-4 top-4 text-primary-foreground"><X className="h-7 w-7" /></button>
-          <img src={imgs[i].url} alt={alt(i)} className="max-h-full max-w-full object-contain" onClick={(e) => e.stopPropagation()} />
+          <img src={imgs[i]!.url} alt={alt(i)} className="max-h-full max-w-full object-contain" onClick={(e) => e.stopPropagation()} />
           {imgs.length > 1 && (
             <>
               <button onClick={(e) => { e.stopPropagation(); go(-1); }} aria-label="Previous image" className="absolute left-4 text-primary-foreground"><ChevronLeft className="h-8 w-8" /></button>
