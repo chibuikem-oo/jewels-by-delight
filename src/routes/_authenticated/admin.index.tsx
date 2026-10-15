@@ -52,7 +52,10 @@ function Dashboard() {
   async function uploadCover(b: Brand, file: File) {
     const path = `brands/${b.slug}/cover-${Date.now()}.${file.name.split(".").pop()}`;
     const { error } = await supabase.storage.from(BUCKET).upload(path, file);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     const url = await signPath(path);
     if (url) updateBrand(b.id, { cover_image_url: url });
   }
@@ -102,7 +105,7 @@ function Dashboard() {
             {list.map((p) => {
               const img = primaryImage(p);
               return (
-                <Link key={p.id} to="/admin/products/$id" params={{ id: p.id }} className="flex items-center gap-4 p-3 hover:bg-secondary">
+                <Link key={p.id} to="/admin/products/$id" params={{ id: p.id }} search={{}} className="flex items-center gap-4 p-3 hover:bg-secondary">
                   {img ? <img src={img.url} alt="" className="h-14 w-14 rounded-lg object-cover" /> : <div className="h-14 w-14 rounded-lg bg-secondary" />}
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium">{p.name}</p>

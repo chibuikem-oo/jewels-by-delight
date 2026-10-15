@@ -9,7 +9,7 @@ import { fieldCls } from "@/lib/admin";
 import { AVAILABILITY, BUCKET, fetchProducts, slugify, sortBrands, type Brand, type ProductImage } from "@/lib/catalog";
 
 export const Route = createFileRoute("/_authenticated/admin/products/$id")({
-  validateSearch: (s: Record<string, unknown>) => ({ brand: typeof s.brand === "string" ? s.brand : undefined }),
+  validateSearch: (s: Record<string, unknown>): { brand?: string } => ({ brand: typeof s["brand"] === "string" ? (s["brand"] as string) : undefined }),
   head: () => ({ meta: [{ title: "Edit watch | JewelsByDelight" }, { name: "robots", content: "noindex" }] }),
   component: () => <AdminGate><Editor /></AdminGate>,
 });
@@ -60,7 +60,10 @@ function Editor() {
   const brand = brands.find((b) => b.id === form.brand_id);
 
   async function save(another = false) {
-    if (!form.brand_id || !form.name.trim()) return toast.error("Choose a brand and enter a name.");
+    if (!form.brand_id || !form.name.trim()) {
+      toast.error("Choose a brand and enter a name.");
+      return;
+    }
     setBusy(true);
     try {
       const n = (v: string) => v.trim() || null;
@@ -131,7 +134,10 @@ function Editor() {
     if (!confirm("Delete this watch and all its photos?")) return;
     await supabase.storage.from(BUCKET).remove(images.map((i) => i.storage_path));
     const { error } = await supabase.from("products").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     qc.invalidateQueries({ queryKey: ["products"] });
     nav({ to: "/admin" });
   }
@@ -141,7 +147,7 @@ function Editor() {
       const c = [...l];
       const j = k + d;
       if (j < 0 || j >= c.length) return l;
-      [c[k], c[j]] = [c[j], c[k]];
+      [c[k], c[j]] = [c[j]!, c[k]!];
       return c;
     });
 
