@@ -3,13 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import watch1 from "@/assets/watch-1.jpg";
 import watch2 from "@/assets/watch-2.jpg";
 import watch3 from "@/assets/watch-3.jpg";
-import watch4 from "@/assets/watch-4.jpg";
-import watch5 from "@/assets/watch-5.jpg";
-import watch6 from "@/assets/watch-6.jpg";
 
 export const BUCKET = "watch-images";
 export const heroImages = [watch1, watch2, watch3];
-const fallbackCovers = [watch4, watch5, watch6, watch1, watch2, watch3];
 
 export type Brand = {
   id: string;
@@ -65,9 +61,10 @@ export function sortBrands<T extends { name: string }>(brands: T[]): T[] {
   );
 }
 
-export function brandCover(brand: Pick<Brand, "cover_image_url" | "slug">, index = 0) {
-  if (brand.cover_image_url) return brand.cover_image_url;
-  return fallbackCovers[index % fallbackCovers.length];
+// Brand covers are only real, admin-uploaded photos. No generic fallback is
+// ever assigned to a brand; callers render a neutral placeholder instead.
+export function brandCover(brand: Pick<Brand, "cover_image_url" | "slug">, _index = 0): string | null {
+  return brand.cover_image_url || null;
 }
 
 export function formatPrice(price: number | null) {

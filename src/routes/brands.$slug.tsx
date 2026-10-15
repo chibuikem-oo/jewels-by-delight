@@ -3,6 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { Layout } from "@/components/site/Layout";
 import { CatalogBrowser } from "@/components/site/CatalogBrowser";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
+import { BrandCover } from "@/components/site/BrandCover";
 import { brandCover, brandsQuery, fetchProducts, settingsQuery } from "@/lib/catalog";
 
 const brandProductsQuery = (brandId: string) =>
@@ -53,7 +54,7 @@ function BrandPage() {
   return (
     <Layout>
       <section className="relative overflow-hidden">
-        <img src={brandCover(brand, idx)} alt={`${brand.name} watches`} width={1600} height={600} className="absolute inset-0 h-full w-full object-cover" />
+        <BrandCover src={brandCover(brand, idx)} name={brand.name} width={1600} height={600} className="absolute inset-0 h-full w-full" imgClassName="object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-foreground/20" />
         <div className="relative mx-auto max-w-6xl px-6 py-24">
           <nav className="text-xs uppercase tracking-[0.2em] text-primary-foreground/70">
