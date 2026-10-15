@@ -1,3 +1,4 @@
 ## Tasks
-- [x] Richard Mille cover v2 (blue strap) — uploaded, DB updated, verify render
-- [ ] Rolex cover v2 (user-uploads://1-13.jpg) — edit to ivory, upload, update DB, verify
+- [x] Richard Mille cover v2 (blue strap) — live and verified
+- [x] Rolex cover v2 (Datejust) — live and verified
+- [ ] Tissot cover (user-uploads://1-14.jpg) — edit to ivory, upload, update DB, verify
