@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { brandCover, type Brand } from "@/lib/catalog";
+import { BrandCover } from "./BrandCover";
 
 export function BrandGrid({ brands }: { brands: Brand[] }) {
   return (
@@ -11,13 +12,13 @@ export function BrandGrid({ brands }: { brands: Brand[] }) {
           params={{ slug: b.slug }}
           className="group relative block overflow-hidden rounded-2xl bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <img
+          <BrandCover
             src={brandCover(b, idx)}
-            alt={`${b.name} watches`}
-            loading="lazy"
+            name={b.name}
             width={800}
             height={1000}
-            className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="aspect-[4/5] w-full transition-transform duration-700 group-hover:scale-105"
+            imgClassName="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
