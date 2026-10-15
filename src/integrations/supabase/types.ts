@@ -14,16 +14,202 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      brands: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      product_images: {
+        Row: {
+          alt_text: string | null
+          created_at: string
+          display_order: number
+          id: string
+          is_primary: boolean
+          product_id: string
+          storage_path: string
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_primary?: boolean
+          product_id: string
+          storage_path: string
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_primary?: boolean
+          product_id?: string
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          availability_status: string
+          brand_id: string
+          case_material: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          dial_colour: string | null
+          id: string
+          is_featured: boolean
+          is_published: boolean
+          model: string | null
+          movement_type: string | null
+          name: string
+          price: number | null
+          slug: string
+          strap_material: string | null
+          updated_at: string
+          water_resistance: string | null
+        }
+        Insert: {
+          availability_status?: string
+          brand_id: string
+          case_material?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          dial_colour?: string | null
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          model?: string | null
+          movement_type?: string | null
+          name: string
+          price?: number | null
+          slug: string
+          strap_material?: string | null
+          updated_at?: string
+          water_resistance?: string | null
+        }
+        Update: {
+          availability_status?: string
+          brand_id?: string
+          case_material?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          dial_colour?: string | null
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          model?: string | null
+          movement_type?: string | null
+          name?: string
+          price?: number | null
+          slug?: string
+          strap_material?: string | null
+          updated_at?: string
+          water_resistance?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_settings: {
+        Row: {
+          id: number
+          updated_at: string
+          whatsapp_number: string | null
+        }
+        Insert: {
+          id?: number
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Update: {
+          id?: number
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +336,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
