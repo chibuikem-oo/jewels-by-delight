@@ -110,8 +110,8 @@ function Index() {
             Jewelry made to be treasured
           </h1>
           <p className="fade-up-delayed mt-6 max-w-xl text-lg leading-relaxed text-primary-foreground/85">
-            Delicate gold and pearl pieces, shaped by hand and finished with
-            care — for the moments, big and small, worth remembering.
+            Delicate gold and pearl pieces, shaped by hand and finished with care — for the moments,
+            big and small, worth remembering.
           </p>
           <a
             href="#collection"
@@ -132,8 +132,8 @@ function Index() {
             Pieces we love right now
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            Each piece is made to order in our atelier. If something catches
-            your eye, reach out — we would love to make it yours.
+            Each piece is made to order in our atelier. If something catches your eye, reach out —
+            we would love to make it yours.
           </p>
         </div>
 
@@ -154,9 +154,7 @@ function Index() {
                 <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
                   {piece.category}
                 </p>
-                <h3 className="mt-1 font-display text-2xl font-medium">
-                  {piece.name}
-                </h3>
+                <h3 className="mt-1 font-display text-2xl font-medium">{piece.name}</h3>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   {piece.description}
                 </p>
@@ -187,15 +185,13 @@ function Index() {
               A little atelier, a lot of heart
             </h2>
             <p className="mt-6 leading-relaxed text-muted-foreground">
-              JewelsByDelight began at a kitchen table with a spool of gold
-              wire and a handful of pearls. Today, every piece is still shaped,
-              polished and finished by hand — slowly, deliberately, and always
-              with the person who will wear it in mind.
+              JewelsByDelight began at a kitchen table with a spool of gold wire and a handful of
+              pearls. Today, every piece is still shaped, polished and finished by hand — slowly,
+              deliberately, and always with the person who will wear it in mind.
             </p>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              We work in small batches using responsibly sourced gold and
-              freshwater pearls, so no two pieces are ever exactly alike. That
-              is exactly how we like it.
+              We work in small batches using responsibly sourced gold and freshwater pearls, so no
+              two pieces are ever exactly alike. That is exactly how we like it.
             </p>
           </div>
         </div>
@@ -210,8 +206,7 @@ function Index() {
           Found something you love?
         </h2>
         <p className="mx-auto mt-4 max-w-md leading-relaxed text-muted-foreground">
-          Every piece is made to order. Send us a note and we will craft it
-          just for you.
+          Every piece is made to order. Send us a note and we will craft it just for you.
         </p>
         <a
           href="mailto:hello@jewelsbydelight.com"

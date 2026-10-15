@@ -1,0 +1,8 @@
+{
+  "name": "Jewels by Delight",
+  "description": "Handcrafted gold and pearl jewelry boutique featuring delicate necklaces, earrings, rings, bangles, and bracelets.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
