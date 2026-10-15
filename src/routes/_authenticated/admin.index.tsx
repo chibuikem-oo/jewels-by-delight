@@ -6,6 +6,7 @@ import { AdminGate } from "@/components/admin/AdminGate";
 import { supabase } from "@/integrations/supabase/client";
 import { adminProductsQuery, fieldCls, isAdminQuery } from "@/lib/admin";
 import { AVAILABILITY, BUCKET, brandCover, formatPrice, primaryImage, settingsQuery, signPath, sortBrands, type Brand } from "@/lib/catalog";
+import { BrandCover } from "@/components/site/BrandCover";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   head: () => ({ meta: [{ title: "Admin | JewelsByDelight" }, { name: "robots", content: "noindex" }] }),
@@ -136,7 +137,7 @@ function BrandEditor({ brand, idx, count, onSave, onCover }: { brand: Brand; idx
   const [desc, setDesc] = useState(brand.description ?? "");
   return (
     <div className="flex gap-4 rounded-xl border bg-card p-4">
-      <img src={brandCover(brand, idx)} alt="" className="h-24 w-20 rounded-lg object-cover" />
+      <BrandCover src={brandCover(brand, idx)} name={brand.name} className="h-24 w-20 shrink-0 overflow-hidden rounded-lg" imgClassName="object-cover" />
       <div className="flex-1 space-y-2">
         <div className="flex items-center justify-between">
           <p className="font-medium">{brand.name} <span className="text-xs text-muted-foreground">({count})</span></p>
