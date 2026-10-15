@@ -1,6 +1,5 @@
 ## Tasks
-- [x] Richard Mille cover v2 (blue strap) — live and verified
-- [x] Rolex cover v2 (Datejust) — live and verified
-- [x] Tissot cover — live and verified
-- [ ] Tommy Hilfiger cover — waiting on photo from user
+- [x] All 14 brand covers live (Tommy Hilfiger was the last)
 - [ ] Admin access — waiting on user signup email from /auth
+- [ ] WhatsApp number — waiting on user to supply it
+- [ ] Watches — catalog empty until user adds them brand by brand
