@@ -25,7 +25,7 @@ export function Layout({ children, overlay = false }: { children: ReactNode; ove
               light ? "text-primary-foreground drop-shadow-sm" : "text-foreground",
             )}
           >
-            Jewels<span className="italic text-gold">By</span>Delight
+            Jewels<span className={cn("italic", light ? "text-gold-soft" : "text-gold")}>By</span>Delight
           </Link>
           <div className={cn("hidden items-center gap-8 text-sm font-medium tracking-wide md:flex", light ? "text-primary-foreground/90" : "text-foreground/80")}>
             {nav.map((n) => (
