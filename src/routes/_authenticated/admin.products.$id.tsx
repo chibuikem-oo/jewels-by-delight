@@ -9,7 +9,7 @@ import { fieldCls } from "@/lib/admin";
 import { AVAILABILITY, BUCKET, fetchProducts, slugify, sortBrands, type Brand, type ProductImage } from "@/lib/catalog";
 
 export const Route = createFileRoute("/_authenticated/admin/products/$id")({
-  validateSearch: (s: Record<string, unknown>): { brand?: string } => ({ brand: typeof s["brand"] === "string" ? (s["brand"] as string) : undefined }),
+  validateSearch: (s: Record<string, unknown>): { brand?: string | undefined } => ({ brand: typeof s["brand"] === "string" ? (s["brand"] as string) : undefined }),
   head: () => ({ meta: [{ title: "Edit watch | JewelsByDelight" }, { name: "robots", content: "noindex" }] }),
   component: () => <AdminGate><Editor /></AdminGate>,
 });
