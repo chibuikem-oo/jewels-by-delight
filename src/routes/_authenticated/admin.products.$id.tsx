@@ -60,15 +60,15 @@ function Editor() {
   const brand = brands.find((b) => b.id === form.brand_id);
 
   async function save(another = false) {
-    if (!form.brand_id || !form.name.trim()) {
-      toast.error("Choose a brand and enter a name.");
+    if (!form.brand_id) {
+      toast.error("Choose a brand.");
       return;
     }
     setBusy(true);
     try {
       const n = (v: string) => v.trim() || null;
       const row = {
-        brand_id: form.brand_id, name: form.name.trim(), model: n(form.model), description: n(form.description),
+        brand_id: form.brand_id, name: form.name.trim() || `${brand?.name ?? "Watch"} watch`, model: n(form.model), description: n(form.description),
         availability_status: form.availability_status,
         is_featured: form.is_featured, is_published: form.is_published, strap_material: n(form.strap_material),
         dial_colour: n(form.dial_colour), case_material: n(form.case_material), movement_type: n(form.movement_type),
@@ -77,7 +77,7 @@ function Editor() {
       let pid = id;
       let pslug = slug;
       if (isNew) {
-        pslug = `${slugify(`${brand?.name} ${form.name} ${form.model}`)}-${Math.random().toString(36).slice(2, 6)}`;
+        pslug = `${slugify(`${brand?.name} ${row.name} ${form.model}`)}-${Math.random().toString(36).slice(2, 6)}`;
         const { data, error } = await supabase.from("products").insert({ ...row, slug: pslug }).select("id").single();
         if (error) throw error;
         pid = data.id;
@@ -100,7 +100,7 @@ function Editor() {
         const { error } = await supabase.from("product_images").insert({
           product_id: pid, storage_path: path, display_order: order,
           is_primary: !images.length && !hasPrimary && k === 0,
-          alt_text: `${brand?.name} ${form.name}${k ? ` photo ${order + 1}` : ""}`,
+          alt_text: `${row.name}${k ? ` photo ${order + 1}` : ""}`,
         });
         if (error) throw error;
       }
@@ -147,16 +147,12 @@ function Editor() {
       const c = [...l];
       const j = k + d;
       if (j < 0 || j >= c.length) return l;
-      [c[k], c[j]] = [c[j]!, c[k]!];
+      const current = c[k];
+      const target = c[j];
+      if (!current || !target) return l;
+      [c[k], c[j]] = [target, current];
       return c;
     });
-
-  const text = (k: keyof Form, label: string, ph = "") => (
-    <label className="block text-sm">
-      <span className="mb-1 block text-muted-foreground">{label}</span>
-      <input className={fieldCls} placeholder={ph} value={form[k] as string} onChange={(e) => set(k, e.target.value as never)} />
-    </label>
-  );
 
   return (
     <div>
@@ -172,25 +168,12 @@ function Editor() {
               {brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
             </select>
           </label>
-          {text("name", "Product name *")}
-          {text("model", "Model / reference")}
           <label className="block text-sm">
             <span className="mb-1 block text-muted-foreground">Availability</span>
             <select className={fieldCls} value={form.availability_status} onChange={(e) => set("availability_status", e.target.value)}>
               {Object.entries(AVAILABILITY).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </select>
           </label>
-          <label className="block text-sm">
-            <span className="mb-1 block text-muted-foreground">Description</span>
-            <textarea className={`${fieldCls} h-28 py-2`} value={form.description} onChange={(e) => set("description", e.target.value)} />
-          </label>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {text("strap_material", "Strap material")}
-            {text("dial_colour", "Dial colour")}
-            {text("case_material", "Case material")}
-            {text("movement_type", "Movement")}
-            {text("water_resistance", "Water resistance")}
-          </div>
           <div className="flex flex-wrap gap-6 text-sm">
             <label className="flex items-center gap-2"><input type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} /> Published (visible on site)</label>
             <label className="flex items-center gap-2"><input type="checkbox" checked={form.is_featured} onChange={(e) => set("is_featured", e.target.checked)} /> Featured on home page</label>
