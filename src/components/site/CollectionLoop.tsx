@@ -15,8 +15,24 @@ export function CollectionLoop({ products }: { products: Product[] }) {
 
   useEffect(() => {
     // Signed URLs can differ between loader reads; attach them only after hydration.
-    setPhotosReady(true);
-    setCycles([selectCollectionCycle(products), selectCollectionCycle(products)]);
+    const next = [selectCollectionCycle(products), selectCollectionCycle(products)];
+    setCycles(next);
+    // Preload every photo before revealing them, so they appear together and fast.
+    const urls = next.flat().map((product) => primaryImage(product)?.url).filter((url): url is string => Boolean(url));
+    let cancelled = false;
+    Promise.all(
+      urls.map(
+        (url) =>
+          new Promise<void>((resolve) => {
+            const preloader = new Image();
+            preloader.onload = () => resolve();
+            preloader.onerror = () => resolve();
+            preloader.src = url;
+          }),
+      ),
+    ).then(() => {
+      if (!cancelled) setPhotosReady(true);
+    });
     const element = viewport.current;
     if (!element) return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -30,7 +46,7 @@ export function CollectionLoop({ products }: { products: Product[] }) {
     const advance = (time: number) => {
       const width = firstCycle.current?.getBoundingClientRect().width ?? 0;
       if (visible && !reducedMotion.matches && !document.hidden && width > 0) {
-        offset += Math.min(time - (lastTime || time), 64) * 0.06;
+        offset += Math.min(time - (lastTime || time), 64) * 0.07;
         if (offset >= width) {
           offset -= width;
           setCycles((previous) => [previous[1] ?? [], selectCollectionCycle(products)]);
@@ -42,6 +58,7 @@ export function CollectionLoop({ products }: { products: Product[] }) {
     };
     frame = requestAnimationFrame(advance);
     return () => {
+      cancelled = true;
       observer.disconnect();
       cancelAnimationFrame(frame);
     };
