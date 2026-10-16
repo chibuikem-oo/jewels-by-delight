@@ -163,5 +163,5 @@ export function whatsappLink(number: string | null, message?: string) {
 
 export function productMessage(p: Pick<Product, "name" | "brand">) {
   const brand = p.brand?.name ?? "";
-  return `Hello JewelsByDelight, I'm interested in the ${brand} ${p.name}. Please let me know its price, availability and how I can order it.`;
+  return `Hello JewelsByDelight, I'd like to buy the ${brand} ${p.name}. Is it available?`;
 }

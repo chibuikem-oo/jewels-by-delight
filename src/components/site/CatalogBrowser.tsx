@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 import { AVAILABILITY, sortBrands, type Product } from "@/lib/catalog";
 import { EmptyCollection, ProductCard } from "./ProductCard";
+import { Button } from "@/components/ui/button";
 
 const PAGE = 24;
 
@@ -9,8 +10,6 @@ export function CatalogBrowser({ products, showBrandFilter = true }: { products:
   const [q, setQ] = useState("");
   const [brand, setBrand] = useState("");
   const [avail, setAvail] = useState("");
-  const [min, setMin] = useState("");
-  const [max, setMax] = useState("");
   const [sort, setSort] = useState("newest");
   const [limit, setLimit] = useState(PAGE);
 
@@ -19,7 +18,6 @@ export function CatalogBrowser({ products, showBrandFilter = true }: { products:
     products.forEach((p) => p.brand && m.set(p.brand.id, p.brand));
     return sortBrands([...m.values()]);
   }, [products]);
-  const hasPrices = products.some((p) => p.price != null);
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -27,26 +25,16 @@ export function CatalogBrowser({ products, showBrandFilter = true }: { products:
       if (term && ![p.name, p.model, p.brand?.name].some((v) => v?.toLowerCase().includes(term))) return false;
       if (brand && p.brand_id !== brand) return false;
       if (avail && p.availability_status !== avail) return false;
-      if (min && (p.price == null || p.price < Number(min))) return false;
-      if (max && (p.price == null || p.price > Number(max))) return false;
       return true;
     });
     const byName = (a: Product, b: Product) => a.name.localeCompare(b.name, "en", { sensitivity: "base" });
     if (sort === "name") list = [...list].sort(byName);
-    if (sort === "price-asc" || sort === "price-desc") {
-      const dir = sort === "price-asc" ? 1 : -1;
-      list = [...list].sort((a, b) => {
-        if (a.price == null) return 1;
-        if (b.price == null) return -1;
-        return (a.price - b.price) * dir;
-      });
-    }
     return list;
-  }, [products, q, brand, avail, min, max, sort]);
+  }, [products, q, brand, avail, sort]);
 
-  const active = q || brand || avail || min || max || sort !== "newest";
+  const active = q || brand || avail || sort !== "newest";
   const clear = () => {
-    setQ(""); setBrand(""); setAvail(""); setMin(""); setMax(""); setSort("newest");
+    setQ(""); setBrand(""); setAvail(""); setSort("newest");
   };
   const field = "h-11 rounded-full border bg-card px-4 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
 
@@ -70,22 +58,14 @@ export function CatalogBrowser({ products, showBrandFilter = true }: { products:
           <option value="">Any availability</option>
           {Object.entries(AVAILABILITY).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
-        {hasPrices && (
-          <>
-            <input aria-label="Minimum price" type="number" min={0} value={min} onChange={(e) => setMin(e.target.value)} placeholder="Min ₦" className={`${field} w-28`} />
-            <input aria-label="Maximum price" type="number" min={0} value={max} onChange={(e) => setMax(e.target.value)} placeholder="Max ₦" className={`${field} w-28`} />
-          </>
-        )}
         <select aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value)} className={field}>
           <option value="newest">Newest</option>
           <option value="name">Name A–Z</option>
-          {hasPrices && <option value="price-asc">Price: low to high</option>}
-          {hasPrices && <option value="price-desc">Price: high to low</option>}
         </select>
         {active && (
-          <button onClick={clear} className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+          <Button variant="link" onClick={clear} className="gap-1">
             <X className="h-4 w-4" /> Clear filters
-          </button>
+          </Button>
         )}
       </div>
       <p className="mb-6 text-sm text-muted-foreground">{filtered.length} {filtered.length === 1 ? "watch" : "watches"}</p>
@@ -98,9 +78,9 @@ export function CatalogBrowser({ products, showBrandFilter = true }: { products:
       )}
       {filtered.length > limit && (
         <div className="mt-12 text-center">
-          <button onClick={() => setLimit((l) => l + PAGE)} className="rounded-full border border-primary px-8 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-primary hover:bg-primary hover:text-primary-foreground">
+          <Button variant="outline" onClick={() => setLimit((l) => l + PAGE)} className="rounded-full px-8">
             Load more
-          </button>
+          </Button>
         </div>
       )}
     </div>

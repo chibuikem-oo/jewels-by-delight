@@ -11,7 +11,7 @@ export function ProductRail({ products }: { products: Product[] }) {
       <div ref={ref} className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 [touch-action:pan-x_pan-y]">
         {products.map((p) => (
           <div key={p.id} className="w-[70%] shrink-0 snap-start sm:w-[40%] lg:w-[23%]">
-            <ProductCard product={p} showEnquiry={false} />
+            <ProductCard product={p} />
           </div>
         ))}
         <div className="w-2 shrink-0" />

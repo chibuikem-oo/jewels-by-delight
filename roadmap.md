@@ -1,5 +1,6 @@
 ## Tasks
+- [x] Remove prices throughout the catalog and admin; use WhatsApp purchase messaging for each watch
 - [x] All 14 brand covers live (Tommy Hilfiger was the last)
-- [ ] Admin access — waiting on user signup email from /auth
-- [ ] WhatsApp number — waiting on user to supply it
+- [x] Admin access granted to the user's account
+- [x] WhatsApp number saved
 - [ ] Watches — catalog empty until user adds them brand by brand
