@@ -4,9 +4,10 @@ import { Layout } from "@/components/site/Layout";
 import { HeroSlider } from "@/components/site/HeroSlider";
 import { ProductRail } from "@/components/site/ProductRail";
 import { BrandGrid } from "@/components/site/BrandGrid";
-import { EmptyCollection, ProductCard } from "@/components/site/ProductCard";
+import { EmptyCollection } from "@/components/site/ProductCard";
+import { CollectionLoop } from "@/components/site/CollectionLoop";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
-import { brandsQuery, featuredQuery, heroImages, productsQuery, settingsQuery } from "@/lib/catalog";
+import { brandsQuery, heroImages, productsQuery, settingsQuery } from "@/lib/catalog";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,7 +23,6 @@ export const Route = createFileRoute("/")({
   loader: ({ context: { queryClient } }) =>
     Promise.all([
       queryClient.ensureQueryData(brandsQuery()),
-      queryClient.ensureQueryData(featuredQuery()),
       queryClient.ensureQueryData(productsQuery()),
       queryClient.ensureQueryData(settingsQuery()),
     ]).then(() => null),
@@ -33,9 +33,7 @@ const btn = "inline-flex items-center justify-center rounded-full px-8 py-3.5 te
 
 function Home() {
   const { data: brands } = useSuspenseQuery(brandsQuery());
-  const { data: featured } = useSuspenseQuery(featuredQuery());
   const { data: all } = useSuspenseQuery(productsQuery());
-  const showcase = featured.length ? featured : all.slice(0, 6);
 
   return (
     <Layout overlay>
@@ -62,12 +60,9 @@ function Home() {
         <div className="mb-14 max-w-xl">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-gold">The Collection</p>
           <h2 className="mt-3 font-display text-4xl font-medium sm:text-5xl">Timepieces worth discovering</h2>
-          <p className="mt-4 leading-relaxed text-muted-foreground">Explore our selection of wristwatches across distinctive brands and styles.</p>
         </div>
-        {showcase.length ? (
-          <div className="grid grid-cols-1 gap-x-8 gap-y-14 min-[420px]:grid-cols-2 lg:grid-cols-3">
-            {showcase.slice(0, 6).map((p) => <ProductCard key={p.id} product={p} />)}
-          </div>
+        {all.length ? (
+          <CollectionLoop products={all} />
         ) : (
           <EmptyCollection />
         )}
