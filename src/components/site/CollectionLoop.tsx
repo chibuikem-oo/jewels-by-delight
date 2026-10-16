@@ -46,7 +46,7 @@ export function CollectionLoop({ products }: { products: Product[] }) {
     const advance = (time: number) => {
       const width = firstCycle.current?.getBoundingClientRect().width ?? 0;
       if (visible && !reducedMotion.matches && !document.hidden && width > 0) {
-        offset += Math.min(time - (lastTime || time), 64) * 0.06;
+        offset += Math.min(time - (lastTime || time), 64) * 0.07;
         if (offset >= width) {
           offset -= width;
           setCycles((previous) => [previous[1] ?? [], selectCollectionCycle(products)]);
@@ -58,6 +58,7 @@ export function CollectionLoop({ products }: { products: Product[] }) {
     };
     frame = requestAnimationFrame(advance);
     return () => {
+      cancelled = true;
       observer.disconnect();
       cancelAnimationFrame(frame);
     };
