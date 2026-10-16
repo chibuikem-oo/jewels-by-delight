@@ -16,3 +16,5 @@
 - Watch photos are in the private `watch-images` bucket (workspace blocks public buckets); always display them via signed URLs.
 - Public SELECT policies must not call has_role (anon cannot execute it); admin access is a separate `for all to authenticated` policy.
 - Brand display order is computed client-side with sortBrands (case-insensitive name), never by insert order.
+- Keep watch prices out of public and admin presentation while retaining existing database columns; this preserves stored data without adding an on-site sales flow.
+- WhatsApp buttons use the loader-prefetched settings query with suspense so server and browser render the same contact action.

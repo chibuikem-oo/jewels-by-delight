@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { MessageCircle } from "lucide-react";
 import { settingsQuery, whatsappLink } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ export function WhatsAppButton({
   variant?: "solid" | "outline";
   className?: string;
 }) {
-  const { data } = useQuery(settingsQuery());
+  const { data } = useSuspenseQuery(settingsQuery());
   const href = whatsappLink(data?.whatsapp_number ?? null, message);
   const base = cn(
     "inline-flex h-auto min-h-11 max-w-full items-center justify-center gap-2 whitespace-normal rounded-full px-6 py-3 text-center text-xs font-semibold uppercase tracking-[0.15em] transition-transform [&_svg]:shrink-0",
