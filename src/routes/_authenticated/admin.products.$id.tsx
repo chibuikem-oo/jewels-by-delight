@@ -6,7 +6,7 @@ import { ArrowDown, ArrowUp, Star, Trash2 } from "lucide-react";
 import { AdminGate } from "@/components/admin/AdminGate";
 import { supabase } from "@/integrations/supabase/client";
 import { fieldCls } from "@/lib/admin";
-import { AVAILABILITY, BUCKET, fetchProducts, slugify, sortBrands, type Brand, type ProductImage } from "@/lib/catalog";
+import { AVAILABILITY, BUCKET, fetchProducts, slugify, sortBrands, watchName, type Brand, type ProductImage } from "@/lib/catalog";
 
 export const Route = createFileRoute("/_authenticated/admin/products/$id")({
   validateSearch: (s: Record<string, unknown>): { brand?: string | undefined } => ({ brand: typeof s["brand"] === "string" ? (s["brand"] as string) : undefined }),
@@ -60,7 +60,7 @@ function Editor() {
   const brand = brands.find((b) => b.id === form.brand_id);
 
   async function save(another = false) {
-    if (!form.brand_id) {
+    if (!brand) {
       toast.error("Choose a brand.");
       return;
     }
@@ -68,7 +68,7 @@ function Editor() {
     try {
       const n = (v: string) => v.trim() || null;
       const row = {
-        brand_id: form.brand_id, name: form.name.trim() || `${brand?.name ?? "Watch"} watch`, model: n(form.model), description: n(form.description),
+        brand_id: brand.id, name: watchName(brand), model: n(form.model), description: n(form.description),
         availability_status: form.availability_status,
         is_featured: form.is_featured, is_published: form.is_published, strap_material: n(form.strap_material),
         dial_colour: n(form.dial_colour), case_material: n(form.case_material), movement_type: n(form.movement_type),
@@ -157,7 +157,7 @@ function Editor() {
   return (
     <div>
       <Link to="/admin" className="text-sm text-primary underline">← Back to dashboard</Link>
-      <h2 className="mt-4 font-display text-3xl">{isNew ? "Add a watch" : form.name || "Edit watch"}</h2>
+      <h2 className="mt-4 font-display text-3xl">{isNew ? "Add a watch" : brand?.name || "Edit watch"}</h2>
       {brand && <p className="text-sm text-muted-foreground">Brand: {brand.name}</p>}
       <div className="mt-8 grid gap-10 lg:grid-cols-2">
         <div className="space-y-4">
@@ -181,7 +181,7 @@ function Editor() {
         </div>
 
         <div>
-          <p className="mb-2 text-sm text-muted-foreground">Photos {brand && `for ${brand.name} ${form.name}`}</p>
+          <p className="mb-2 text-sm text-muted-foreground">Photos {brand && `for ${brand.name}`}</p>
           <div className="grid grid-cols-3 gap-3">
             {images.map((im, k) => (
               <div key={im.id} className={`relative overflow-hidden rounded-lg border-2 ${im.is_primary ? "border-gold" : "border-transparent"}`}>

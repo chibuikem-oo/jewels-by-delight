@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { CatalogBrowser } from "@/components/site/CatalogBrowser";
-import { productMessage, type Product } from "@/lib/catalog";
+import { productMessage, watchName, type Product } from "@/lib/catalog";
 
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children, to, params, ...props }: any) => <a href={to.replace("$slug", params?.slug ?? "")} {...props}>{children}</a>,
@@ -27,6 +27,12 @@ describe("Photo-only watch catalog", () => {
     expect(screen.queryByLabelText("Minimum price")).toBeNull();
     const link = screen.getByRole("link", { name: "Message to buy on WhatsApp" });
     expect(link.getAttribute("href")).toBe(`https://wa.me/2348132846147?text=${encodeURIComponent(productMessage(watch))}`);
-    expect(productMessage(watch)).toContain("I'd like to buy the Poedagar User-supplied watch");
+    expect(productMessage(watch)).toContain("I'd like to buy the Poedagar watch");
+  });
+
+  it.each(["Audemars Piguet", "Cartier", "Casio", "Curren", "Hislon", "Hublot", "Megir", "Michael Kors", "Patek Philippe", "Poedagar", "Richard Mille", "Rolex", "Tissot", "Tommy Hilfiger"])("uses only %s for watch names and enquiries", (name) => {
+    const brand = { id: "brand", slug: "brand", name };
+    expect(watchName(brand)).toBe(name);
+    expect(productMessage({ name: `${name} watch 8`, brand })).toBe(`Hello JewelsByDelight, I'd like to buy the ${name} watch I saw on your website. Is it available?`);
   });
 });

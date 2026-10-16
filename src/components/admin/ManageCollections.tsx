@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { fieldCls } from "@/lib/admin";
-import { BUCKET, primaryImage, slugify, type Brand, type Product } from "@/lib/catalog";
+import { BUCKET, primaryImage, slugify, watchName, type Brand, type Product } from "@/lib/catalog";
 import { Button } from "@/components/ui/button";
 
 type Item = { key: string; file: File; preview: string; status: "pending" | "uploading" | "done" | "failed"; error?: string | undefined };
@@ -40,7 +40,7 @@ export function ManageCollections({ brands, products }: { brands: Brand[]; produ
       if (it.file.size > 10 * 1024 * 1024) throw new Error("Larger than 10 MB");
       const slug = `${slugify(brand.name)}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
       const { data: prod, error: pe } = await supabase.from("products")
-        .insert({ brand_id: brand.id, name: brand.name, slug, is_published: false, availability_status: "available" })
+        .insert({ brand_id: brand.id, name: watchName(brand), slug, is_published: false, availability_status: "available" })
         .select("id").single();
       if (pe) throw pe;
       const ext = it.file.name.split(".").pop() || "jpg";

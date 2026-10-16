@@ -17,8 +17,8 @@ export const Route = createFileRoute("/watches/$slug")({
     return { name: p.name, brand: p.brand?.name ?? "", description: p.description };
   },
   head: ({ loaderData }) => {
-    const t = loaderData ? `${loaderData.brand} ${loaderData.name} | JewelsByDelight` : "Watch | JewelsByDelight";
-    const d = loaderData?.description?.slice(0, 155) || (loaderData ? `${loaderData.brand} ${loaderData.name} at JewelsByDelight. Enquire on WhatsApp.` : "Watch details");
+    const t = loaderData ? `${loaderData.brand || loaderData.name} Watches | JewelsByDelight` : "Watch | JewelsByDelight";
+    const d = loaderData?.description?.slice(0, 155) || (loaderData ? `${loaderData.brand || loaderData.name} watches at JewelsByDelight. Enquire on WhatsApp.` : "Watch details");
     return {
       meta: [
         { title: t },
@@ -122,8 +122,7 @@ function WatchPage() {
         <div className="grid gap-12 lg:grid-cols-2">
           <Gallery product={p} />
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-gold">{p.brand?.name}</p>
-            <h1 className="mt-2 font-display text-4xl font-medium sm:text-5xl">{p.name}</h1>
+            <h1 className="mt-2 font-display text-4xl font-medium sm:text-5xl">{p.brand?.name ?? p.name}</h1>
             <p className="mt-1 text-sm text-muted-foreground">{AVAILABILITY[p.availability_status] ?? p.availability_status}</p>
             {p.description && <p className="mt-6 whitespace-pre-line leading-relaxed text-muted-foreground">{p.description}</p>}
             {specs.length > 0 && (

@@ -84,6 +84,10 @@ export function primaryImage(p: Product) {
   return p.images.find((i) => i.is_primary) ?? p.images[0];
 }
 
+export function watchName(brand: Pick<Brand, "name">) {
+  return brand.name;
+}
+
 // Images live in a private bucket; signed URLs are issued per read.
 async function signImages(rows: Omit<ProductImage, "url">[]): Promise<ProductImage[]> {
   if (!rows.length) return [];
@@ -162,7 +166,6 @@ export function whatsappLink(number: string | null, message?: string) {
 }
 
 export function productMessage(p: Pick<Product, "name" | "brand">) {
-  const brand = p.brand?.name ?? "";
-  const name = p.name.trim().toLowerCase() === brand.toLowerCase() ? "" : ` ${p.name}`;
-  return `Hello JewelsByDelight, I'd like to buy the ${brand}${name} watch I saw on your website. Is it available?`;
+  const name = p.brand ? watchName(p.brand) : "";
+  return `Hello JewelsByDelight, I'd like to buy the ${name} watch I saw on your website. Is it available?`;
 }
