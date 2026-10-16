@@ -7,7 +7,7 @@ import { fieldCls } from "@/lib/admin";
 import { BUCKET, primaryImage, slugify, type Brand, type Product } from "@/lib/catalog";
 import { Button } from "@/components/ui/button";
 
-type Item = { key: string; file: File; preview: string; status: "pending" | "uploading" | "done" | "failed"; error?: string };
+type Item = { key: string; file: File; preview: string; status: "pending" | "uploading" | "done" | "failed"; error?: string | undefined };
 
 /**
  * Bulk upload: each photo becomes its own draft watch under the chosen brand
@@ -56,7 +56,7 @@ export function ManageCollections({ brands, products }: { brands: Brand[]; produ
   }
 
   async function uploadAll() {
-    if (!brand) return toast.error("Select a brand first");
+    if (!brand) { toast.error("Select a brand first"); return; }
     setBusy(true);
     const queue = items.filter((i) => i.status === "pending" || i.status === "failed");
     let n = products.filter((p) => p.brand_id === brand.id).length;
@@ -72,7 +72,7 @@ export function ManageCollections({ brands, products }: { brands: Brand[]; produ
   async function publish(ids: string[]) {
     if (!ids.length) return;
     const { error } = await supabase.from("products").update({ is_published: true }).in("id", ids);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(`${ids.length} watch${ids.length === 1 ? "" : "es"} published to ${brand?.name}`);
     qc.invalidateQueries({ queryKey: ["products"] });
   }
