@@ -20,3 +20,4 @@
 - WhatsApp buttons use the loader-prefetched settings query with suspense so server and browser render the same contact action.
 - Both watch upload paths use watchName from the selected brand, backed by the database naming trigger on every insert/update; hidden descriptive fields retain stored values so the simplified editor does not erase catalog data.
 - Bulk collection uploads create one draft watch per photo under the chosen brand (storage brands/<brand-slug>/<watch-slug>/); they never touch brand covers, so covers and collection photos stay separate.
+- Homepage collection animation uses CollectionLoop with the pure selectCollectionCycle helper over loader-prefetched published products; keeping selection separate allows brand coverage tests and preserves other catalog purchase actions.
