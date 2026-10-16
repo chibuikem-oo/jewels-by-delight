@@ -25,7 +25,7 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
       <div className="mt-4 flex flex-1 flex-col">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">{product.brand?.name}</p>
-        <h3 className="mt-1 font-display text-2xl font-medium leading-tight">{product.name}</h3>
+        {product.name.trim().toLowerCase() !== (product.brand?.name ?? "").toLowerCase() && <h3 className="mt-1 font-display text-2xl font-medium leading-tight">{product.name}</h3>}
         {product.model && <p className="text-sm text-muted-foreground">{product.model}</p>}
         <div className="mt-4 flex flex-wrap gap-2">
           <Link
