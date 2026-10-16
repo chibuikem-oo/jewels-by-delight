@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Watch, X } from "lucide-react";
 import { Layout } from "@/components/site/Layout";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
-import { AVAILABILITY, formatPrice, productMessage, productQuery, settingsQuery, type Product } from "@/lib/catalog";
+import { AVAILABILITY, productMessage, productQuery, settingsQuery, type Product } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/watches/$slug")({
@@ -124,7 +124,6 @@ function WatchPage() {
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-gold">{p.brand?.name}</p>
             <h1 className="mt-2 font-display text-4xl font-medium sm:text-5xl">{p.name}</h1>
-            <p className="mt-4 text-2xl font-semibold">{formatPrice(p.price) ?? "Price on request"}</p>
             <p className="mt-1 text-sm text-muted-foreground">{AVAILABILITY[p.availability_status] ?? p.availability_status}</p>
             {p.description && <p className="mt-6 whitespace-pre-line leading-relaxed text-muted-foreground">{p.description}</p>}
             {specs.length > 0 && (
@@ -137,7 +136,7 @@ function WatchPage() {
                 ))}
               </dl>
             )}
-            <div className="mt-8"><WhatsAppButton message={productMessage(p)} label="Enquire on WhatsApp" /></div>
+            <div className="mt-8"><WhatsAppButton message={productMessage(p)} label="Message to buy on WhatsApp" className="max-w-full tracking-normal" /></div>
           </div>
         </div>
       </div>

@@ -1,11 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { Watch } from "lucide-react";
-import { AVAILABILITY, formatPrice, primaryImage, productMessage, type Product } from "@/lib/catalog";
+import { primaryImage, productMessage, type Product } from "@/lib/catalog";
 import { WhatsAppButton } from "./WhatsAppButton";
 
-export function ProductCard({ product, showEnquiry = true }: { product: Product; showEnquiry?: boolean }) {
+export function ProductCard({ product }: { product: Product }) {
   const img = primaryImage(product);
-  const price = formatPrice(product.price);
   return (
     <article className="group flex flex-col">
       <Link to="/watches/$slug" params={{ slug: product.slug }} className="block overflow-hidden rounded-2xl bg-secondary">
@@ -28,10 +27,6 @@ export function ProductCard({ product, showEnquiry = true }: { product: Product;
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">{product.brand?.name}</p>
         <h3 className="mt-1 font-display text-2xl font-medium leading-tight">{product.name}</h3>
         {product.model && <p className="text-sm text-muted-foreground">{product.model}</p>}
-        <div className="mt-2 flex items-center justify-between text-sm">
-          <span className="font-semibold">{price ?? "Price on request"}</span>
-          <span className="text-muted-foreground">{AVAILABILITY[product.availability_status] ?? product.availability_status}</span>
-        </div>
         <div className="mt-4 flex flex-wrap gap-2">
           <Link
             to="/watches/$slug"
@@ -40,7 +35,7 @@ export function ProductCard({ product, showEnquiry = true }: { product: Product;
           >
             View details
           </Link>
-          {showEnquiry && <WhatsAppButton message={productMessage(product)} label="Enquire" className="px-5 py-2.5" />}
+          <WhatsAppButton message={productMessage(product)} label="Message to buy on WhatsApp" className="w-full px-3 py-2.5 tracking-normal" />
         </div>
       </div>
     </article>
