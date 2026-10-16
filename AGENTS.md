@@ -18,3 +18,4 @@
 - Brand display order is computed client-side with sortBrands (case-insensitive name), never by insert order.
 - Keep watch prices out of public and admin presentation while retaining existing database columns; this preserves stored data without adding an on-site sales flow.
 - WhatsApp buttons use the loader-prefetched settings query with suspense so server and browser render the same contact action.
+- Watch creation derives a fallback name from the selected brand when no name exists; hidden descriptive fields retain stored values so the simplified editor does not erase catalog data.
