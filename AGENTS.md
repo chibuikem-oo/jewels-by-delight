@@ -19,3 +19,4 @@
 - Keep watch prices out of public and admin presentation while retaining existing database columns; this preserves stored data without adding an on-site sales flow.
 - WhatsApp buttons use the loader-prefetched settings query with suspense so server and browser render the same contact action.
 - Watch creation derives a fallback name from the selected brand when no name exists; hidden descriptive fields retain stored values so the simplified editor does not erase catalog data.
+- Bulk collection uploads create one draft watch per photo under the chosen brand (storage brands/<brand-slug>/<watch-slug>/); they never touch brand covers, so covers and collection photos stay separate.

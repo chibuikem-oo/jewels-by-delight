@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { adminProductsQuery, fieldCls, isAdminQuery } from "@/lib/admin";
 import { AVAILABILITY, BUCKET, brandCover, primaryImage, settingsQuery, signPath, sortBrands, type Brand } from "@/lib/catalog";
 import { BrandCover } from "@/components/site/BrandCover";
+import { ManageCollections } from "@/components/admin/ManageCollections";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   head: () => ({ meta: [{ title: "Admin | JewelsByDelight" }, { name: "description", content: "Manage the JewelsByDelight watch catalog, brand covers and WhatsApp contact." }, { property: "og:title", content: "Admin | JewelsByDelight" }, { property: "og:description", content: "Manage watches, brand covers and WhatsApp contact." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
@@ -87,6 +88,8 @@ function Dashboard() {
         </div>
         <p className="mt-2 text-xs text-muted-foreground">International format with country code, digits only (234…).</p>
       </section>
+
+      <ManageCollections brands={brands} products={products} />
 
       <section>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
