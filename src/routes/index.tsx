@@ -2,12 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Layout } from "@/components/site/Layout";
 import { HeroSlider } from "@/components/site/HeroSlider";
-import { ProductRail } from "@/components/site/ProductRail";
 import { BrandGrid } from "@/components/site/BrandGrid";
 import { EmptyCollection } from "@/components/site/ProductCard";
 import { CollectionLoop } from "@/components/site/CollectionLoop";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { brandsQuery, heroImages, productsQuery, settingsQuery } from "@/lib/catalog";
+import storyImage from "@/assets/watch-5.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -68,15 +68,6 @@ function Home() {
         )}
       </section>
 
-      {all.length > 0 && (
-        <section className="bg-secondary py-24">
-          <div className="mx-auto max-w-6xl px-6">
-            <h2 className="mb-10 font-display text-4xl font-medium sm:text-5xl">Discover Your Next Timepiece</h2>
-            <ProductRail products={all.slice(0, 16)} />
-          </div>
-        </section>
-      )}
-
       <section className="mx-auto max-w-6xl px-6 py-24">
         <div className="mb-12 flex flex-wrap items-end justify-between gap-4">
           <h2 className="font-display text-4xl font-medium sm:text-5xl">Explore Watches by Brand</h2>
@@ -85,7 +76,32 @@ function Home() {
         <BrandGrid brands={brands} />
       </section>
 
-      <section className="bg-secondary px-6 py-24 text-center">
+      <section className="bg-secondary">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-24 lg:grid-cols-2 lg:items-center">
+          <div className="overflow-hidden rounded-2xl">
+            <img src={storyImage} alt="Rose gold watch with tan leather strap" width={800} height={1008} className="aspect-[4/5] w-full object-cover" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-gold">Our Story</p>
+            <h2 className="mt-3 font-display text-4xl font-medium sm:text-5xl">A Passion for Time and Style</h2>
+            <p className="mt-6 leading-relaxed text-muted-foreground">
+              At JewelsByDelight, we bring together wristwatches from a diverse range of brands to help you find a timepiece that reflects your personal style.
+            </p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              From everyday designs to distinctive statement watches, our collection is designed to make exploring different styles and brands simple and enjoyable.
+            </p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              Browse our collection, discover your preferred brand, and contact us directly for enquiries about available watches.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Link to="/our-story" className={`${btn} bg-primary text-primary-foreground`}>Read Our Story</Link>
+              <Link to="/collection" className={`${btn} border border-primary/30 text-primary`}>Explore the Collection</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-24 text-center">
         <h2 className="mx-auto max-w-2xl text-balance font-display text-4xl font-medium sm:text-5xl">Found a watch you love?</h2>
         <p className="mx-auto mt-4 max-w-md leading-relaxed text-muted-foreground">
           Tell us which timepiece caught your eye, and contact JewelsByDelight directly on WhatsApp for enquiries and ordering.
