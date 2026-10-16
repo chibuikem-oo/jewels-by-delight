@@ -1,6 +1,6 @@
 ## Tasks
-- [ ] Tidy the watch-loop hydration warning and verify photos still load and animate
-- [ ] Keep only the primary-coloured Explore the Collection button in homepage Our Story
+- [x] Tidy the watch-loop hydration warning and verify photos still load and animate
+- [x] Keep only the primary-coloured Explore the Collection button in homepage Our Story
 - [x] Replace the homepage featured-watch carousel with an Our Story panel placed after "Explore Watches by Brand"
 - [x] Replace the homepage collection grid with a continuous photo-only loop; verify per-brand selection and desktop/mobile rendering
 - [x] Remove prices throughout the catalog and admin; use WhatsApp purchase messaging for each watch
