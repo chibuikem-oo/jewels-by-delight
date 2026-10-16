@@ -3,6 +3,7 @@ import { primaryImage, type Product } from "@/lib/catalog";
 import { selectCollectionCycle } from "@/lib/collection-loop";
 
 export function CollectionLoop({ products }: { products: Product[] }) {
+  const [photosReady, setPhotosReady] = useState(false);
   // Deterministic first render keeps server and browser markup identical.
   const [cycles, setCycles] = useState(() => {
     const initial = selectCollectionCycle(products, () => 0.999);
@@ -13,6 +14,8 @@ export function CollectionLoop({ products }: { products: Product[] }) {
   const firstCycle = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Signed URLs can differ between loader reads; attach them only after hydration.
+    setPhotosReady(true);
     setCycles([selectCollectionCycle(products), selectCollectionCycle(products)]);
     const element = viewport.current;
     if (!element) return;
@@ -55,7 +58,7 @@ export function CollectionLoop({ products }: { products: Product[] }) {
               const image = primaryImage(product);
               return (
                 <div key={product.id} className="watch-loop-photo overflow-hidden rounded-lg bg-secondary">
-                  <img src={image?.url} alt={product.brand?.name ?? product.name} className="h-full w-full object-cover" decoding="async" />
+                  <img src={photosReady ? image?.url : undefined} alt={product.brand?.name ?? product.name} className="h-full w-full object-cover" decoding="async" />
                 </div>
               );
             })}

@@ -5,6 +5,7 @@ import { HeroSlider } from "@/components/site/HeroSlider";
 import { BrandGrid } from "@/components/site/BrandGrid";
 import { EmptyCollection } from "@/components/site/ProductCard";
 import { CollectionLoop } from "@/components/site/CollectionLoop";
+import { Button } from "@/components/ui/button";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { brandsQuery, heroImages, productsQuery, settingsQuery } from "@/lib/catalog";
 import storyImage from "@/assets/watch-5.jpg";
@@ -96,8 +97,9 @@ function Home() {
               Browse our collection, discover your preferred brand, and contact us directly for enquiries about available watches.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
-              <Link to="/our-story" className={`${btn} bg-primary text-primary-foreground`}>Read Our Story</Link>
-              <Link to="/collection" className={`${btn} border border-primary/30 text-primary`}>Explore the Collection</Link>
+              <Button asChild className={`${btn} h-auto shadow-none`}>
+                <Link to="/collection">Explore the Collection</Link>
+              </Button>
             </div>
           </div>
         </div>
