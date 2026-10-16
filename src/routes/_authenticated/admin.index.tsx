@@ -5,11 +5,11 @@ import { toast } from "sonner";
 import { AdminGate } from "@/components/admin/AdminGate";
 import { supabase } from "@/integrations/supabase/client";
 import { adminProductsQuery, fieldCls, isAdminQuery } from "@/lib/admin";
-import { AVAILABILITY, BUCKET, brandCover, formatPrice, primaryImage, settingsQuery, signPath, sortBrands, type Brand } from "@/lib/catalog";
+import { AVAILABILITY, BUCKET, brandCover, primaryImage, settingsQuery, signPath, sortBrands, type Brand } from "@/lib/catalog";
 import { BrandCover } from "@/components/site/BrandCover";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
-  head: () => ({ meta: [{ title: "Admin | JewelsByDelight" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Admin | JewelsByDelight" }, { name: "description", content: "Manage the JewelsByDelight watch catalog, brand covers and WhatsApp contact." }, { property: "og:title", content: "Admin | JewelsByDelight" }, { property: "og:description", content: "Manage watches, brand covers and WhatsApp contact." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
   component: AdminPage,
 });
 
@@ -110,7 +110,7 @@ function Dashboard() {
                   {img ? <img src={img.url} alt="" className="h-14 w-14 rounded-lg object-cover" /> : <div className="h-14 w-14 rounded-lg bg-secondary" />}
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium">{p.name}</p>
-                    <p className="text-xs text-muted-foreground">{p.brand?.name} · {formatPrice(p.price) ?? "No price"} · {AVAILABILITY[p.availability_status]}</p>
+                    <p className="text-xs text-muted-foreground">{p.brand?.name} · {AVAILABILITY[p.availability_status]}</p>
                   </div>
                   <span className={`rounded-full px-2.5 py-1 text-xs ${p.is_published ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>{p.is_published ? "Published" : "Draft"}</span>
                   {p.is_featured && <span className="text-xs text-gold">★ Featured</span>}

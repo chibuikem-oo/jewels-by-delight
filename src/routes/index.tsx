@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "JewelsByDelight | Premium Wristwatch Collection" },
-      { name: "description", content: "Browse wristwatches from 14 brands at JewelsByDelight, Nigeria. View photos and prices, then enquire or order directly on WhatsApp." },
+      { name: "description", content: "Browse wristwatch photos from 14 brands at JewelsByDelight, Nigeria, and message us on WhatsApp to buy." },
       { property: "og:title", content: "JewelsByDelight | Premium Wristwatch Collection" },
       { property: "og:description", content: "Wristwatches for every style, occasion and moment. Enquire on WhatsApp." },
       { property: "og:type", content: "website" },

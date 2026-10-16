@@ -8,7 +8,7 @@ export const Route = createFileRoute("/collection")({
   head: () => ({
     meta: [
       { title: "The Collection | JewelsByDelight" },
-      { name: "description", content: "Browse every wristwatch available at JewelsByDelight. Search by brand or model, filter by price and availability, and enquire on WhatsApp." },
+      { name: "description", content: "Browse available wristwatch photos at JewelsByDelight. Find a watch by brand or model and message us on WhatsApp to buy." },
       { property: "og:title", content: "The Collection | JewelsByDelight" },
       { property: "og:description", content: "Find the timepiece that fits your style." },
       { property: "og:type", content: "website" },

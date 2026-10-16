@@ -10,12 +10,12 @@ import { AVAILABILITY, BUCKET, fetchProducts, slugify, sortBrands, type Brand, t
 
 export const Route = createFileRoute("/_authenticated/admin/products/$id")({
   validateSearch: (s: Record<string, unknown>): { brand?: string | undefined } => ({ brand: typeof s["brand"] === "string" ? (s["brand"] as string) : undefined }),
-  head: () => ({ meta: [{ title: "Edit watch | JewelsByDelight" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Edit watch | JewelsByDelight" }, { name: "description", content: "Manage individual watch photos and brand assignments at JewelsByDelight." }, { property: "og:title", content: "Edit watch | JewelsByDelight" }, { property: "og:description", content: "Manage individual watch photos and brand assignments." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
   component: () => <AdminGate><Editor /></AdminGate>,
 });
 
 const empty = {
-  brand_id: "", name: "", model: "", description: "", price: "", availability_status: "available",
+  brand_id: "", name: "", model: "", description: "", availability_status: "available",
   is_featured: false, is_published: false, strap_material: "", dial_colour: "", case_material: "", movement_type: "", water_resistance: "",
 };
 type Form = typeof empty;
@@ -49,7 +49,7 @@ function Editor() {
     setImages(product.images);
     setForm({
       brand_id: product.brand_id, name: product.name, model: product.model ?? "", description: product.description ?? "",
-      price: product.price == null ? "" : String(product.price), availability_status: product.availability_status,
+      availability_status: product.availability_status,
       is_featured: product.is_featured, is_published: product.is_published, strap_material: product.strap_material ?? "",
       dial_colour: product.dial_colour ?? "", case_material: product.case_material ?? "", movement_type: product.movement_type ?? "",
       water_resistance: product.water_resistance ?? "",
@@ -69,7 +69,7 @@ function Editor() {
       const n = (v: string) => v.trim() || null;
       const row = {
         brand_id: form.brand_id, name: form.name.trim(), model: n(form.model), description: n(form.description),
-        price: form.price === "" ? null : Number(form.price), availability_status: form.availability_status,
+        availability_status: form.availability_status,
         is_featured: form.is_featured, is_published: form.is_published, strap_material: n(form.strap_material),
         dial_colour: n(form.dial_colour), case_material: n(form.case_material), movement_type: n(form.movement_type),
         water_resistance: n(form.water_resistance),
@@ -174,10 +174,6 @@ function Editor() {
           </label>
           {text("name", "Product name *")}
           {text("model", "Model / reference")}
-          <label className="block text-sm">
-            <span className="mb-1 block text-muted-foreground">Price (₦) — leave empty if not set</span>
-            <input type="number" min={0} className={fieldCls} value={form.price} onChange={(e) => set("price", e.target.value)} />
-          </label>
           <label className="block text-sm">
             <span className="mb-1 block text-muted-foreground">Availability</span>
             <select className={fieldCls} value={form.availability_status} onChange={(e) => set("availability_status", e.target.value)}>

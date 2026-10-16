@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MessageCircle } from "lucide-react";
 import { settingsQuery, whatsappLink } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export function WhatsAppButton({
   message,
@@ -17,7 +18,7 @@ export function WhatsAppButton({
   const { data } = useQuery(settingsQuery());
   const href = whatsappLink(data?.whatsapp_number ?? null, message);
   const base = cn(
-    "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] transition-transform",
+    "inline-flex h-auto min-h-11 max-w-full items-center justify-center gap-2 whitespace-normal rounded-full px-6 py-3 text-center text-xs font-semibold uppercase tracking-[0.15em] transition-transform [&_svg]:shrink-0",
     variant === "solid"
       ? "bg-primary text-primary-foreground hover:scale-[1.03]"
       : "border border-primary text-primary hover:bg-primary hover:text-primary-foreground",
@@ -31,8 +32,10 @@ export function WhatsAppButton({
     );
   }
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={base}>
-      <MessageCircle className="h-4 w-4" /> {label}
-    </a>
+    <Button asChild variant={variant === "solid" ? "default" : "outline"} className={base}>
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        <MessageCircle className="h-4 w-4" /> {label}
+      </a>
+    </Button>
   );
 }
