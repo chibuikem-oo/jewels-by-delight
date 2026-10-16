@@ -56,16 +56,18 @@ function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <div className="mb-14 max-w-xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-gold">The Collection</p>
-          <h2 className="mt-3 font-display text-4xl font-medium sm:text-5xl">Timepieces worth discovering</h2>
+      <section className="bg-secondary py-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-14 max-w-xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-gold">The Collection</p>
+            <h2 className="mt-3 font-display text-4xl font-medium sm:text-5xl">Timepieces worth discovering</h2>
+          </div>
+          {all.length ? (
+            <CollectionLoop products={all} />
+          ) : (
+            <EmptyCollection />
+          )}
         </div>
-        {all.length ? (
-          <CollectionLoop products={all} />
-        ) : (
-          <EmptyCollection />
-        )}
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-24">
