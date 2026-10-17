@@ -84,7 +84,7 @@ export function CollectionLoop({ products }: { products: Product[] }) {
               const image = primaryImage(product);
               return (
                 <div key={product.id} className="watch-loop-photo overflow-hidden rounded-lg bg-secondary">
-                  <img src={photosReady ? image?.url : undefined} alt={product.brand?.name ?? product.name} className="h-full w-full object-cover" decoding="async" />
+                  <img src={photosReady ? image?.url : undefined} alt={product.brand?.name ?? product.name} className="h-full w-full object-cover" decoding="async" onError={retryFreshLinks} />
                 </div>
               );
             })}
