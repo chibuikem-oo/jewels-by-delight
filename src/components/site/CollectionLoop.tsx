@@ -1,8 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { primaryImage, type Product } from "@/lib/catalog";
 import { selectCollectionCycle } from "@/lib/collection-loop";
 
 export function CollectionLoop({ products }: { products: Product[] }) {
+  const queryClient = useQueryClient();
+  // Signed photo links expire; if one fails to load, refetch fresh links once.
+  const refreshed = useRef(false);
+  const retryFreshLinks = () => {
+    if (refreshed.current) return;
+    refreshed.current = true;
+    queryClient.invalidateQueries({ queryKey: ["products", "published"] });
+  };
   const [photosReady, setPhotosReady] = useState(false);
   // Deterministic first render keeps server and browser markup identical.
   const [cycles, setCycles] = useState(() => {
