@@ -4,7 +4,8 @@ import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Watch, X } from "lucide-react";
 import { Layout } from "@/components/site/Layout";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
-import { AVAILABILITY, productMessage, productQuery, settingsQuery, type Product } from "@/lib/catalog";
+import { AVAILABILITY, productMessage, productQuery, settingsQuery, watchPhotoLink, type Product } from "@/lib/catalog";
+import { useSiteOrigin } from "@/lib/site-origin";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/watches/$slug")({
@@ -99,6 +100,7 @@ function Gallery({ product }: { product: Product }) {
 
 function WatchPage() {
   const { slug } = Route.useParams();
+  const origin = useSiteOrigin();
   const { data: p } = useSuspenseQuery(productQuery(slug));
   if (!p) return null;
   const specs = [
@@ -135,7 +137,7 @@ function WatchPage() {
                 ))}
               </dl>
             )}
-            <div className="mt-8"><WhatsAppButton message={productMessage(p)} label="Tap to Buy" className="max-w-full tracking-normal" /></div>
+            <div className="mt-8"><WhatsAppButton message={productMessage(p, watchPhotoLink(p.slug, origin))} label="Tap to Buy" className="max-w-full tracking-normal" /></div>
           </div>
         </div>
       </div>

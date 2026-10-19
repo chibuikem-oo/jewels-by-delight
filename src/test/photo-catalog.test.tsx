@@ -2,10 +2,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { CatalogBrowser } from "@/components/site/CatalogBrowser";
-import { productMessage, watchName, type Product } from "@/lib/catalog";
+import { productMessage, watchName, watchPhotoLink, type Product } from "@/lib/catalog";
 
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children, to, params, ...props }: any) => <a href={to.replace("$slug", params?.slug ?? "")} {...props}>{children}</a>,
+  useHydrated: () => false,
 }));
 
 const watch: Product = {
@@ -28,6 +29,14 @@ describe("Photo-only watch catalog", () => {
     const link = screen.getByRole("link", { name: "Tap to Buy" });
     expect(link.getAttribute("href")).toBe(`https://wa.me/2348132846147?text=${encodeURIComponent(productMessage(watch))}`);
     expect(productMessage(watch)).toContain("I'd like to buy the Poedagar watch");
+  });
+
+  it("sends the watch photo link with the enquiry once the site address is known", () => {
+    const link = watchPhotoLink(watch.slug, "https://jewelsbydelight.example");
+    expect(link).toBe("https://jewelsbydelight.example/api/public/watch-photo/user-supplied-watch");
+    expect(productMessage(watch, link)).toBe(
+      `Hello JewelsByDelight, I'd like to buy the Poedagar watch I saw on your website. Is it available?\n\nPhoto: https://jewelsbydelight.example/api/public/watch-photo/user-supplied-watch`,
+    );
   });
 
   it.each(["Audemars Piguet", "Cartier", "Casio", "Curren", "Hislon", "Hublot", "Megir", "Michael Kors", "Patek Philippe", "Poedagar", "Richard Mille", "Rolex", "Tissot", "Tommy Hilfiger"])("uses only %s for watch names and enquiries", (name) => {
