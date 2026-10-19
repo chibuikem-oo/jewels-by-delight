@@ -1,4 +1,5 @@
 ## Tasks
+- [x] Send the watch's own photo link with every "Tap to Buy" WhatsApp message
 - [x] Label the watch purchase button "Tap to Buy" on cards and watch pages
 - [x] Tidy the watch-loop hydration warning and verify photos still load and animate
 - [x] Keep only the primary-coloured Explore the Collection button in homepage Our Story

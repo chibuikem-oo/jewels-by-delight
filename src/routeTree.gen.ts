@@ -20,6 +20,7 @@ import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as WatchesSlugRouteImport } from './routes/watches.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminProductsIdRouteImport } from './routes/_authenticated/admin.products.$id'
+import { Route as ApiPublicWatchPhotoSlugRouteImport } from './routes/api/public/watch-photo/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -76,6 +77,11 @@ const AuthenticatedAdminProductsIdRoute =
     path: '/admin/products/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicWatchPhotoSlugRoute = ApiPublicWatchPhotoSlugRouteImport.update({
+  id: '/api/public/watch-photo/$slug',
+  path: '/api/public/watch-photo/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/brands/': typeof BrandsIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
+  '/api/public/watch-photo/$slug': typeof ApiPublicWatchPhotoSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/brands': typeof BrandsIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
+  '/api/public/watch-photo/$slug': typeof ApiPublicWatchPhotoSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/brands/': typeof BrandsIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
+  '/api/public/watch-photo/$slug': typeof ApiPublicWatchPhotoSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/brands/'
     | '/admin/'
     | '/admin/products/$id'
+    | '/api/public/watch-photo/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/brands'
     | '/admin'
     | '/admin/products/$id'
+    | '/api/public/watch-photo/$slug'
   id:
     | '__root__'
     | '/'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/brands/'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/products/$id'
+    | '/api/public/watch-photo/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -165,6 +177,7 @@ export interface RootRouteChildren {
   BrandsSlugRoute: typeof BrandsSlugRoute
   WatchesSlugRoute: typeof WatchesSlugRoute
   BrandsIndexRoute: typeof BrandsIndexRoute
+  ApiPublicWatchPhotoSlugRoute: typeof ApiPublicWatchPhotoSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminProductsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/watch-photo/$slug': {
+      id: '/api/public/watch-photo/$slug'
+      path: '/api/public/watch-photo/$slug'
+      fullPath: '/api/public/watch-photo/$slug'
+      preLoaderRoute: typeof ApiPublicWatchPhotoSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -272,6 +292,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandsSlugRoute: BrandsSlugRoute,
   WatchesSlugRoute: WatchesSlugRoute,
   BrandsIndexRoute: BrandsIndexRoute,
+  ApiPublicWatchPhotoSlugRoute: ApiPublicWatchPhotoSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
