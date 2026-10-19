@@ -165,7 +165,13 @@ export function whatsappLink(number: string | null, message?: string) {
   return `https://wa.me/${digits}${message ? `?text=${encodeURIComponent(message)}` : ""}`;
 }
 
-export function productMessage(p: Pick<Product, "name" | "brand">) {
+// Short, stable link to the watch's own photo; the server signs a fresh copy on each visit.
+export function watchPhotoLink(slug: string, origin: string | null) {
+  return origin ? `${origin}/api/public/watch-photo/${encodeURIComponent(slug)}` : null;
+}
+
+export function productMessage(p: Pick<Product, "name" | "brand">, photoLink?: string | null) {
   const name = p.brand ? watchName(p.brand) : "";
-  return `Hello JewelsByDelight, I'd like to buy the ${name} watch I saw on your website. Is it available?`;
+  const enquiry = `Hello JewelsByDelight, I'd like to buy the ${name} watch I saw on your website. Is it available?`;
+  return photoLink ? `${enquiry}\n\nPhoto: ${photoLink}` : enquiry;
 }
