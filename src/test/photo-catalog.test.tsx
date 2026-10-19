@@ -25,7 +25,7 @@ describe("Photo-only watch catalog", () => {
     expect(screen.getByAltText("Watch photo")).toBeTruthy();
     expect(screen.queryByText(/price/i)).toBeNull();
     expect(screen.queryByLabelText("Minimum price")).toBeNull();
-    const link = screen.getByRole("link", { name: "Message to buy on WhatsApp" });
+    const link = screen.getByRole("link", { name: "Tap to Buy" });
     expect(link.getAttribute("href")).toBe(`https://wa.me/2348132846147?text=${encodeURIComponent(productMessage(watch))}`);
     expect(productMessage(watch)).toContain("I'd like to buy the Poedagar watch");
   });

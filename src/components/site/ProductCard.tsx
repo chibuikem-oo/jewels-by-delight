@@ -35,7 +35,7 @@ export function ProductCard({ product }: { product: Product }) {
           >
             View details
           </Link>
-          <WhatsAppButton message={productMessage(product)} label="Message to buy on WhatsApp" className="w-full px-3 py-2.5 tracking-normal" />
+          <WhatsAppButton message={productMessage(product)} label="Tap to Buy" className="w-full px-3 py-2.5 tracking-normal" />
         </div>
       </div>
     </article>

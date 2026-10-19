@@ -135,7 +135,7 @@ function WatchPage() {
                 ))}
               </dl>
             )}
-            <div className="mt-8"><WhatsAppButton message={productMessage(p)} label="Message to buy on WhatsApp" className="max-w-full tracking-normal" /></div>
+            <div className="mt-8"><WhatsAppButton message={productMessage(p)} label="Tap to Buy" className="max-w-full tracking-normal" /></div>
           </div>
         </div>
       </div>
