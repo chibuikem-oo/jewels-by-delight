@@ -1,7 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { primaryImage, type Product } from "@/lib/catalog";
+import { forgetPhotoLinks, primaryImage, type Product } from "@/lib/catalog";
 import { selectCollectionCycle } from "@/lib/collection-loop";
+
+function preload(urls: string[]) {
+  return Promise.all(
+    urls.map(
+      (url) =>
+        new Promise<void>((resolve) => {
+          const preloader = new Image();
+          preloader.onload = () => resolve();
+          preloader.onerror = () => resolve();
+          preloader.src = url;
+        }),
+    ),
+  );
+}
 
 export function CollectionLoop({ products }: { products: Product[] }) {
   const queryClient = useQueryClient();
@@ -10,6 +24,7 @@ export function CollectionLoop({ products }: { products: Product[] }) {
   const retryFreshLinks = () => {
     if (refreshed.current) return;
     refreshed.current = true;
+    forgetPhotoLinks();
     queryClient.invalidateQueries({ queryKey: ["products", "published"] });
   };
   const [photosReady, setPhotosReady] = useState(false);
@@ -26,22 +41,9 @@ export function CollectionLoop({ products }: { products: Product[] }) {
     // Signed URLs can differ between loader reads; attach them only after hydration.
     const next = [selectCollectionCycle(products), selectCollectionCycle(products)];
     setCycles(next);
-    // Preload every photo before revealing them, so they appear together and fast.
     const urls = next.flat().map((product) => primaryImage(product)?.url).filter((url): url is string => Boolean(url));
     let cancelled = false;
-    Promise.all(
-      urls.map(
-        (url) =>
-          new Promise<void>((resolve) => {
-            const preloader = new Image();
-            preloader.onload = () => resolve();
-            preloader.onerror = () => resolve();
-            preloader.src = url;
-          }),
-      ),
-    ).then(() => {
-      if (!cancelled) setPhotosReady(true);
-    });
+    let started = false;
     const element = viewport.current;
     if (!element) return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -49,7 +51,20 @@ export function CollectionLoop({ products }: { products: Product[] }) {
     let offset = 0;
     let lastTime = 0;
     let frame = 0;
-    const observer = new IntersectionObserver(([entry]) => { visible = entry?.isIntersecting ?? false; });
+    // Photos download only once the loop is about to scroll into view, then all appear together.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const near = entry?.isIntersecting ?? false;
+        visible = near;
+        if (near && !started) {
+          started = true;
+          preload(urls).then(() => {
+            if (!cancelled) setPhotosReady(true);
+          });
+        }
+      },
+      { rootMargin: "300px 0px" },
+    );
     observer.observe(element);
 
     const advance = (time: number) => {

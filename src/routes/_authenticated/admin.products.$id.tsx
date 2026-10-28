@@ -7,6 +7,7 @@ import { AdminGate } from "@/components/admin/AdminGate";
 import { supabase } from "@/integrations/supabase/client";
 import { fieldCls } from "@/lib/admin";
 import { AVAILABILITY, BUCKET, fetchProducts, slugify, sortBrands, watchName, type Brand, type ProductImage } from "@/lib/catalog";
+import { compressImage, PHOTO_CACHE_SECONDS } from "@/lib/image-compress";
 
 export const Route = createFileRoute("/_authenticated/admin/products/$id")({
   validateSearch: (s: Record<string, unknown>): { brand?: string | undefined } => ({ brand: typeof s["brand"] === "string" ? (s["brand"] as string) : undefined }),
@@ -92,9 +93,9 @@ function Editor() {
       }
       // uploads
       for (const [k, p] of pending.entries()) {
-        const ext = p.file.name.split(".").pop() || "jpg";
-        const path = `brands/${brand?.slug}/${pslug}/${Date.now()}-${k}.${ext}`;
-        const up = await supabase.storage.from(BUCKET).upload(path, p.file, { contentType: p.file.type });
+        const photo = await compressImage(p.file);
+        const path = `brands/${brand?.slug}/${pslug}/${Date.now()}-${k}.jpg`;
+        const up = await supabase.storage.from(BUCKET).upload(path, photo, { contentType: "image/jpeg", cacheControl: PHOTO_CACHE_SECONDS });
         if (up.error) throw up.error;
         const order = images.length + k;
         const { error } = await supabase.from("product_images").insert({

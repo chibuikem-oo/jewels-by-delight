@@ -88,17 +88,50 @@ export function watchName(brand: Pick<Brand, "name">) {
   return brand.name;
 }
 
-// Images live in a private bucket; signed URLs are issued per read.
+// Images live in a private bucket and are shown through signed links. In the
+// browser, links are remembered for days so repeat visits reuse the same link
+// and the browser's own photo cache, instead of downloading every photo again.
+const SIGN_SECONDS = 60 * 60 * 24 * 7;
+const REUSE_MIN_REMAINING_MS = 1000 * 60 * 60 * 24;
+const LINK_CACHE_KEY = "jbd-photo-links-v1";
+type LinkCache = Record<string, { url: string; exp: number }>;
+
+function readLinkCache(): LinkCache {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(LINK_CACHE_KEY) ?? "{}") as LinkCache;
+  } catch {
+    return {};
+  }
+}
+
+function writeLinkCache(cache: LinkCache) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(LINK_CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    /* storage full or blocked: links still work, just not reused */
+  }
+}
+
+/** Drop remembered photo links (used when a photo fails to load). */
+export function forgetPhotoLinks() {
+  if (typeof window !== "undefined") window.localStorage.removeItem(LINK_CACHE_KEY);
+}
+
 async function signImages(rows: Omit<ProductImage, "url">[]): Promise<ProductImage[]> {
   if (!rows.length) return [];
-  const { data } = await supabase.storage
-    .from(BUCKET)
-    .createSignedUrls(
-      rows.map((r) => r.storage_path),
-      60 * 60 * 24 * 7,
-    );
-  const map = new Map((data ?? []).map((d) => [d.path, d.signedUrl]));
-  return rows.map((r) => ({ ...r, url: (map.get(r.storage_path) as string | undefined) ?? "" }));
+  const now = Date.now();
+  const cache = readLinkCache();
+  for (const [path, entry] of Object.entries(cache)) if (entry.exp - now < REUSE_MIN_REMAINING_MS) delete cache[path];
+  const missing = [...new Set(rows.map((r) => r.storage_path).filter((p) => !cache[p]))];
+  if (missing.length) {
+    const { data } = await supabase.storage.from(BUCKET).createSignedUrls(missing, SIGN_SECONDS);
+    const exp = now + SIGN_SECONDS * 1000;
+    for (const d of data ?? []) if (d.path && d.signedUrl) cache[d.path] = { url: d.signedUrl, exp };
+    writeLinkCache(cache);
+  }
+  return rows.map((r) => ({ ...r, url: cache[r.storage_path]?.url ?? "" }));
 }
 
 export async function signPath(path: string) {
