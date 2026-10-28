@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useHydrated } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Watch, X } from "lucide-react";
@@ -47,6 +47,8 @@ function Gallery({ product }: { product: Product }) {
   const [i, setI] = useState(Math.max(0, imgs.findIndex((x) => x.is_primary)));
   const [zoom, setZoom] = useState(false);
   const touch = useRef<number | null>(null);
+  // Signed photo links differ per read; attach after hydration so each photo downloads once.
+  const hydrated = useHydrated();
   if (!imgs.length)
     return <div className="flex aspect-square items-center justify-center rounded-2xl bg-secondary text-muted-foreground"><Watch className="h-12 w-12" /></div>;
   const go = (d: number) => setI((x) => (x + d + imgs.length) % imgs.length);
@@ -64,7 +66,7 @@ function Gallery({ product }: { product: Product }) {
         }}
       >
         <button onClick={() => setZoom(true)} className="block w-full" aria-label="Open larger image">
-          <img src={imgs[i]!.url} alt={alt(i)} width={1000} height={1000} className="aspect-square w-full object-contain" />
+          <img src={hydrated ? imgs[i]!.url : undefined} alt={alt(i)} width={1000} height={1000} className="aspect-square w-full object-contain" />
         </button>
         {imgs.length > 1 && (
           <>
@@ -77,7 +79,7 @@ function Gallery({ product }: { product: Product }) {
         <div className="no-scrollbar mt-4 flex gap-3 overflow-x-auto">
           {imgs.map((im, k) => (
             <button key={im.id} onClick={() => setI(k)} aria-label={`Show image ${k + 1}`} className={cn("shrink-0 overflow-hidden rounded-lg border-2", k === i ? "border-gold" : "border-transparent opacity-70")}>
-              <img src={im.url} alt="" loading="lazy" width={80} height={80} className="h-20 w-20 object-cover" />
+              <img src={hydrated ? im.url : undefined} alt="" loading="lazy" width={80} height={80} className="h-20 w-20 object-cover" />
             </button>
           ))}
         </div>
