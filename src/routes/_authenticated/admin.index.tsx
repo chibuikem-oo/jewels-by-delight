@@ -52,8 +52,9 @@ function Dashboard() {
   }
 
   async function uploadCover(b: Brand, file: File) {
-    const path = `brands/${b.slug}/cover-${Date.now()}.${file.name.split(".").pop()}`;
-    const { error } = await supabase.storage.from(BUCKET).upload(path, file);
+    const photo = await compressImage(file);
+    const path = `brands/${b.slug}/cover-${Date.now()}.jpg`;
+    const { error } = await supabase.storage.from(BUCKET).upload(path, photo, { contentType: "image/jpeg", cacheControl: PHOTO_CACHE_SECONDS });
     if (error) {
       toast.error(error.message);
       return;
