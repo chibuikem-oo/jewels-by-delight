@@ -8,6 +8,7 @@ import { adminProductsQuery, fieldCls, isAdminQuery } from "@/lib/admin";
 import { AVAILABILITY, BUCKET, brandCover, primaryImage, settingsQuery, signPath, sortBrands, type Brand } from "@/lib/catalog";
 import { BrandCover } from "@/components/site/BrandCover";
 import { ManageCollections } from "@/components/admin/ManageCollections";
+import { compressImage, PHOTO_CACHE_SECONDS } from "@/lib/image-compress";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   head: () => ({ meta: [{ title: "Admin | JewelsByDelight" }, { name: "description", content: "Manage the JewelsByDelight watch catalog, brand covers and WhatsApp contact." }, { property: "og:title", content: "Admin | JewelsByDelight" }, { property: "og:description", content: "Manage watches, brand covers and WhatsApp contact." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),

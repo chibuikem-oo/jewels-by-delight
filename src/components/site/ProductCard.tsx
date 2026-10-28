@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useHydrated } from "@tanstack/react-router";
 import { Watch } from "lucide-react";
 import { primaryImage, productMessage, watchPhotoLink, type Product } from "@/lib/catalog";
 import { useSiteOrigin } from "@/lib/site-origin";
@@ -7,12 +7,14 @@ import { WhatsAppButton } from "./WhatsAppButton";
 export function ProductCard({ product }: { product: Product }) {
   const img = primaryImage(product);
   const origin = useSiteOrigin();
+  // Photo links are signed per read; attach after hydration so each photo downloads once.
+  const hydrated = useHydrated();
   return (
     <article className="group flex flex-col">
       <Link to="/watches/$slug" params={{ slug: product.slug }} className="block overflow-hidden rounded-2xl bg-secondary">
         {img ? (
           <img
-            src={img.url}
+            src={hydrated ? img.url : undefined}
             alt={img.alt_text || `${product.brand?.name ?? ""} ${product.name}`}
             loading="lazy"
             width={800}

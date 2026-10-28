@@ -7,6 +7,7 @@ import { AdminGate } from "@/components/admin/AdminGate";
 import { supabase } from "@/integrations/supabase/client";
 import { fieldCls } from "@/lib/admin";
 import { AVAILABILITY, BUCKET, fetchProducts, slugify, sortBrands, watchName, type Brand, type ProductImage } from "@/lib/catalog";
+import { compressImage, PHOTO_CACHE_SECONDS } from "@/lib/image-compress";
 
 export const Route = createFileRoute("/_authenticated/admin/products/$id")({
   validateSearch: (s: Record<string, unknown>): { brand?: string | undefined } => ({ brand: typeof s["brand"] === "string" ? (s["brand"] as string) : undefined }),
