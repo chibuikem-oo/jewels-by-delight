@@ -1,4 +1,6 @@
 ## Tasks
+- [x] Cut photo download usage: shrink existing photos, compress new uploads, small preview copies, reuse cached photos, load loop photos near view
+- [x] Branded "We'll be back shortly" page with WhatsApp link instead of a blank screen
 - [x] Send the watch's own photo link with every "Tap to Buy" WhatsApp message
 - [x] Label the watch purchase button "Tap to Buy" on cards and watch pages
 - [x] Tidy the watch-loop hydration warning and verify photos still load and animate
