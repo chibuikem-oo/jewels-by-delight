@@ -7,7 +7,7 @@ import { AdminGate } from "@/components/admin/AdminGate";
 import { supabase } from "@/integrations/supabase/client";
 import { fieldCls } from "@/lib/admin";
 import { AVAILABILITY, BUCKET, fetchProducts, slugify, sortBrands, watchName, type Brand, type ProductImage } from "@/lib/catalog";
-import { compressImage, PHOTO_CACHE_SECONDS } from "@/lib/image-compress";
+import { PHOTO_CACHE_SECONDS, preparePhoto, thumbPath } from "@/lib/image-compress";
 
 export const Route = createFileRoute("/_authenticated/admin/products/$id")({
   validateSearch: (s: Record<string, unknown>): { brand?: string | undefined } => ({ brand: typeof s["brand"] === "string" ? (s["brand"] as string) : undefined }),
@@ -93,10 +93,11 @@ function Editor() {
       }
       // uploads
       for (const [k, p] of pending.entries()) {
-        const photo = await compressImage(p.file);
+        const { photo, thumb } = await preparePhoto(p.file);
         const path = `brands/${brand?.slug}/${pslug}/${Date.now()}-${k}.jpg`;
         const up = await supabase.storage.from(BUCKET).upload(path, photo, { contentType: "image/jpeg", cacheControl: PHOTO_CACHE_SECONDS });
         if (up.error) throw up.error;
+        await supabase.storage.from(BUCKET).upload(thumbPath(path), thumb, { contentType: "image/jpeg", cacheControl: PHOTO_CACHE_SECONDS });
         const order = images.length + k;
         const { error } = await supabase.from("product_images").insert({
           product_id: pid, storage_path: path, display_order: order,
@@ -126,14 +127,14 @@ function Editor() {
   async function removeImage(im: ProductImage) {
     if (!confirm("Remove this photo?")) return;
     await supabase.from("product_images").delete().eq("id", im.id);
-    await supabase.storage.from(BUCKET).remove([im.storage_path]);
+    await supabase.storage.from(BUCKET).remove([im.storage_path, thumbPath(im.storage_path)]);
     setImages((l) => l.filter((x) => x.id !== im.id));
     qc.invalidateQueries({ queryKey: ["products"] });
   }
 
   async function del() {
     if (!confirm("Delete this watch and all its photos?")) return;
-    await supabase.storage.from(BUCKET).remove(images.map((i) => i.storage_path));
+    await supabase.storage.from(BUCKET).remove(images.flatMap((i) => [i.storage_path, thumbPath(i.storage_path)]));
     const { error } = await supabase.from("products").delete().eq("id", id);
     if (error) {
       toast.error(error.message);
