@@ -10,7 +10,7 @@ function watch(brand: string, index: number): Product {
     is_published: true, is_featured: false, availability_status: "available", created_at: "2026-10-16",
     model: null, description: null, price: null, currency: "NGN", strap_material: null,
     dial_colour: null, case_material: null, movement_type: null, water_resistance: null,
-    images: [{ id, product_id: id, storage_path: `${id}.jpg`, url: `/${id}.jpg`, alt_text: null, is_primary: true, display_order: 0 }],
+    images: [{ id, product_id: id, storage_path: `${id}.jpg`, url: `/${id}.jpg`, thumb_url: `/${id}.thumb.jpg`, alt_text: null, is_primary: true, display_order: 0 }],
   };
 }
 

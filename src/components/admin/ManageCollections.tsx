@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { fieldCls } from "@/lib/admin";
 import { BUCKET, primaryImage, slugify, watchName, type Brand, type Product } from "@/lib/catalog";
 import { Button } from "@/components/ui/button";
-import { compressImage, PHOTO_CACHE_SECONDS } from "@/lib/image-compress";
+import { PHOTO_CACHE_SECONDS, preparePhoto, thumbPath } from "@/lib/image-compress";
 
 type Item = { key: string; file: File; preview: string; status: "pending" | "uploading" | "done" | "failed"; error?: string | undefined };
 
@@ -38,7 +38,7 @@ export function ManageCollections({ brands, products }: { brands: Brand[]; produ
     if (!brand) return;
     set(it.key, { status: "uploading", error: undefined });
     try {
-      const photo = await compressImage(it.file);
+      const { photo, thumb } = await preparePhoto(it.file);
       if (photo.size > 10 * 1024 * 1024) throw new Error("Larger than 10 MB");
       const slug = `${slugify(brand.name)}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
       const { data: prod, error: pe } = await supabase.from("products")
@@ -48,6 +48,7 @@ export function ManageCollections({ brands, products }: { brands: Brand[]; produ
       const path = `brands/${brand.slug}/${slug}/${Date.now()}.jpg`;
       const up = await supabase.storage.from(BUCKET).upload(path, photo, { contentType: "image/jpeg", cacheControl: PHOTO_CACHE_SECONDS });
       if (up.error) { await supabase.from("products").delete().eq("id", prod.id); throw up.error; }
+      await supabase.storage.from(BUCKET).upload(thumbPath(path), thumb, { contentType: "image/jpeg", cacheControl: PHOTO_CACHE_SECONDS });
       const { error: ie } = await supabase.from("product_images").insert({ product_id: prod.id, storage_path: path, is_primary: true, display_order: 0, alt_text: `${brand.name} watch` });
       if (ie) throw ie;
       set(it.key, { status: "done" });
@@ -79,7 +80,7 @@ export function ManageCollections({ brands, products }: { brands: Brand[]; produ
   }
 
   async function discard(p: Product) {
-    const paths = p.images.map((i) => i.storage_path);
+    const paths = p.images.flatMap((i) => [i.storage_path, thumbPath(i.storage_path)]);
     if (paths.length) await supabase.storage.from(BUCKET).remove(paths);
     await supabase.from("products").delete().eq("id", p.id);
     qc.invalidateQueries({ queryKey: ["products"] });

@@ -41,7 +41,7 @@ export function CollectionLoop({ products }: { products: Product[] }) {
     // Signed URLs can differ between loader reads; attach them only after hydration.
     const next = [selectCollectionCycle(products), selectCollectionCycle(products)];
     setCycles(next);
-    const urls = next.flat().map((product) => primaryImage(product)?.url).filter((url): url is string => Boolean(url));
+    const urls = next.flat().map((product) => primaryImage(product)?.thumb_url).filter((url): url is string => Boolean(url));
     let cancelled = false;
     let started = false;
     const element = viewport.current;
@@ -99,7 +99,7 @@ export function CollectionLoop({ products }: { products: Product[] }) {
               const image = primaryImage(product);
               return (
                 <div key={product.id} className="watch-loop-photo overflow-hidden rounded-lg bg-secondary">
-                  <img src={photosReady ? image?.url : undefined} alt={product.brand?.name ?? product.name} className="h-full w-full object-cover" decoding="async" onError={retryFreshLinks} />
+                  <img src={photosReady ? image?.thumb_url : undefined} alt={product.brand?.name ?? product.name} className="h-full w-full object-cover" decoding="async" onError={retryFreshLinks} />
                 </div>
               );
             })}

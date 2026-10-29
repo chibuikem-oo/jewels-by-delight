@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { thumbPath } from "@/lib/image-compress";
 import watch1 from "@/assets/watch-1.jpg";
 import watch2 from "@/assets/watch-2.jpg";
 import watch3 from "@/assets/watch-3.jpg";
@@ -24,6 +25,8 @@ export type ProductImage = {
   is_primary: boolean;
   display_order: number;
   url: string;
+  /** Small preview copy for cards and the homepage loop; falls back to the full photo. */
+  thumb_url: string;
 };
 
 export type Product = {
@@ -119,19 +122,23 @@ export function forgetPhotoLinks() {
   if (typeof window !== "undefined") window.localStorage.removeItem(LINK_CACHE_KEY);
 }
 
-async function signImages(rows: Omit<ProductImage, "url">[]): Promise<ProductImage[]> {
+async function signImages(rows: Omit<ProductImage, "url" | "thumb_url">[]): Promise<ProductImage[]> {
   if (!rows.length) return [];
   const now = Date.now();
   const cache = readLinkCache();
   for (const [path, entry] of Object.entries(cache)) if (entry.exp - now < REUSE_MIN_REMAINING_MS) delete cache[path];
-  const missing = [...new Set(rows.map((r) => r.storage_path).filter((p) => !cache[p]))];
+  const wanted = rows.flatMap((r) => [r.storage_path, thumbPath(r.storage_path)]);
+  const missing = [...new Set(wanted.filter((p) => !cache[p]))];
   if (missing.length) {
     const { data } = await supabase.storage.from(BUCKET).createSignedUrls(missing, SIGN_SECONDS);
     const exp = now + SIGN_SECONDS * 1000;
     for (const d of data ?? []) if (d.path && d.signedUrl) cache[d.path] = { url: d.signedUrl, exp };
     writeLinkCache(cache);
   }
-  return rows.map((r) => ({ ...r, url: cache[r.storage_path]?.url ?? "" }));
+  return rows.map((r) => {
+    const url = cache[r.storage_path]?.url ?? "";
+    return { ...r, url, thumb_url: cache[thumbPath(r.storage_path)]?.url || url };
+  });
 }
 
 export async function signPath(path: string) {

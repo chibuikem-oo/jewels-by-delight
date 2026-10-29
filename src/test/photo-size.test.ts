@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fitWithin, MAX_PHOTO_SIDE } from "@/lib/image-compress";
+import { fitWithin, MAX_PHOTO_SIDE, THUMB_SIDE, thumbPath } from "@/lib/image-compress";
 import { FALLBACK_WHATSAPP_LINK } from "@/lib/contact-fallback";
 
 describe("Uploaded photo size", () => {
@@ -11,6 +11,13 @@ describe("Uploaded photo size", () => {
 
   it("never enlarges a photo that is already small", () => {
     expect(fitWithin(800, 1000)).toEqual({ width: 800, height: 1000 });
+  });
+});
+
+describe("Preview copies", () => {
+  it("stores a 720px preview next to each watch photo", () => {
+    expect(THUMB_SIDE).toBe(720);
+    expect(thumbPath("brands/rolex/rolex-abc/1.jpg")).toBe("brands/rolex/rolex-abc/1.jpg.thumb.jpg");
   });
 });
 
