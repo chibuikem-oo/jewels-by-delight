@@ -15,7 +15,7 @@ const watch: Product = {
   is_featured: false, is_published: true, strap_material: null, dial_colour: null,
   case_material: null, movement_type: null, water_resistance: null, created_at: "2026-10-16",
   brand: { id: "brand", name: "Poedagar", slug: "poedagar" },
-  images: [{ id: "photo", product_id: "watch", storage_path: "photo.jpg", alt_text: "Watch photo", is_primary: true, display_order: 0, url: "/photo.jpg" }],
+  images: [{ id: "photo", product_id: "watch", storage_path: "photo.jpg", alt_text: "Watch photo", is_primary: true, display_order: 0, url: "/photo.jpg", thumb_url: "/photo.thumb.jpg" }],
 };
 
 describe("Photo-only watch catalog", () => {

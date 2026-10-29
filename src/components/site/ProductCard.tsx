@@ -14,7 +14,7 @@ export function ProductCard({ product }: { product: Product }) {
       <Link to="/watches/$slug" params={{ slug: product.slug }} className="block overflow-hidden rounded-2xl bg-secondary">
         {img ? (
           <img
-            src={hydrated ? img.url : undefined}
+            src={hydrated ? img.thumb_url : undefined}
             alt={img.alt_text || `${product.brand?.name ?? ""} ${product.name}`}
             loading="lazy"
             width={800}
